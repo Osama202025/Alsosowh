@@ -1,736 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الحقيبة التدريبية للتنظيم الإداري</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#5D5CDE',
-                    }
-                }
-            },
-            darkMode: 'class'
-        }
-
-        // Dark mode detection
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark');
-        }
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-            if (event.matches) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        });
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
-        
-        body {
-            font-family: 'Tajawal', sans-serif;
-        }
-        
-        .section-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-        
-        .section-active .section-content {
-            max-height: 2000px;
-            transition: max-height 0.5s ease-in;
-        }
-        
-        .section-header i {
-            transition: transform 0.3s ease;
-        }
-        
-        .section-active .section-header i {
-            transform: rotate(180deg);
-        }
-
-        .diagram-box {
-            min-height: 200px;
-        }
-
-        /* Progress bar animation */
-        @keyframes progress {
-            0% { width: 0%; }
-            100% { width: 100%; }
-        }
-        
-        .progress-animate {
-            animation: progress 0.5s ease-in-out;
-        }
-    </style>
-</head>
-<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-    <!-- الواجهة الرئيسية -->
-    <div id="home-screen" class="min-h-screen flex flex-col items-center justify-center p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-3xl w-full text-center">
-            <div class="mb-6">
-                <img src="https://i.imgur.com/pUFyGhW.png" alt="شعار الجامعة" class="h-24 mx-auto mb-4">
-                <h1 class="text-4xl font-bold text-primary mb-2">الحقيبة التدريبية للتنظيم الإداري</h1>
-                <p class="text-xl text-gray-600 dark:text-gray-400">دليل شامل لفهم وتطبيق مبادئ التنظيم الإداري الفعال</p>
-            </div>
-            
-            <div class="border-t border-b border-gray-200 dark:border-gray-700 py-6 my-6">
-                <div class="mb-6">
-                    <h2 class="text-2xl font-bold mb-4 text-primary">إعداد الطالب</h2>
-                    <p class="text-xl">أسامة مجد الدين محمدالسوسوة</p>
-                </div>
-                
-                <div>
-                    <h2 class="text-2xl font-bold mb-4 text-primary">إشراف</h2>
-                    <p class="text-xl">د. شرف محمد عباد</p>
-                </div>
-            </div>
-            
-            <button id="start-course" class="bg-primary hover:bg-purple-700 text-white py-3 px-8 rounded-lg text-xl shadow-md transition duration-300 transform hover:scale-105">
-                ابدأ الدورة <i class="fas fa-play-circle ml-2"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- المحتوى التعليمي (مخفي في البداية) -->
-    <div id="course-content" class="hidden">
-        <div class="container mx-auto px-4 py-8 max-w-6xl">
-        <!-- Header -->
-        <header class="mb-8 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-primary mb-2">الحقيبة التدريبية للتنظيم الإداري</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400">دليل شامل لفهم وتطبيق مبادئ التنظيم الإداري الفعال</p>
-            
-            <div class="mt-6 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="font-medium">تقدمك في الدورة</span>
-                    <span id="progress-percent">0%</span>
-                </div>
-                <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-2.5">
-                    <div id="progress-bar" class="bg-primary h-2.5 rounded-full" style="width: 0%"></div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Main Content -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <!-- Sidebar / Navigation -->
-            <div class="md:col-span-1">
-                <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 sticky top-4">
-                    <h2 class="font-bold text-xl mb-4 text-primary">محتويات الدورة</h2>
-                    <ul class="space-y-2" id="nav-list">
-                        <li><a href="#section1" class="nav-link block p-2 hover:bg-primary hover:text-white rounded transition duration-200 active-section">مقدمة في التنظيم الإداري</a></li>
-                        <li><a href="#section2" class="nav-link block p-2 hover:bg-primary hover:text-white rounded transition duration-200">أنواع الهياكل التنظيمية</a></li>
-                        <li><a href="#section3" class="nav-link block p-2 hover:bg-primary hover:text-white rounded transition duration-200">تصميم الهيكل التنظيمي</a></li>
-                        <li><a href="#section4" class="nav-link block p-2 hover:bg-primary hover:text-white rounded transition duration-200">الوظائف الإدارية</a></li>
-                        <li><a href="#section5" class="nav-link block p-2 hover:bg-primary hover:text-white rounded transition duration-200">تفويض السلطة</a></li>
-                        <li><a href="#section6" class="nav-link block p-2 hover:bg-primary hover:text-white rounded transition duration-200">حالات دراسية</a></li>
-                    </ul>
-                    <div class="mt-6 space-y-2">
-                        <button id="print-material" class="w-full bg-primary hover:bg-purple-700 text-white py-2 px-4 rounded flex items-center justify-center">
-                            <i class="fas fa-print mr-2"></i> طباعة المواد
-                        </button>
-                        <button id="download-pdf" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded flex items-center justify-center">
-                            <i class="fas fa-file-pdf mr-2"></i> تحميل كملف PDF
-                        </button>
-                        <button id="download-html" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center justify-center">
-                            <i class="fas fa-file-code mr-2"></i> تحميل كملف HTML
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Content Area -->
-            <div class="md:col-span-3">
-                <div class="space-y-6">
-                    <!-- Section 1 -->
-                    <div id="section1" class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm section section-active">
-                        <div class="section-header cursor-pointer flex justify-between items-center">
-                            <h2 class="text-2xl font-bold text-primary">مقدمة في التنظيم الإداري</h2>
-                            <i class="fas fa-chevron-down text-primary"></i>
-                        </div>
-                        <div class="section-content pt-4">
-                            <p class="mb-4">التنظيم الإداري هو أحد وظائف الإدارة الأساسية ويعتبر ركناً مهماً في نجاح أي مؤسسة. يهتم بتحديد وتقسيم الأنشطة والمهام وتوزيع المسؤوليات والصلاحيات وإنشاء العلاقات بين الأفراد والوحدات التنظيمية.</p>
-                            
-                            <div class="mt-6 mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                <h3 class="font-bold text-lg mb-2">أهمية التنظيم الإداري:</h3>
-                                <ul class="list-disc list-inside space-y-2">
-                                    <li>تقسيم العمل وتحديد المسؤوليات بشكل واضح</li>
-                                    <li>تنسيق الجهود بين الوحدات المختلفة</li>
-                                    <li>تسهيل عملية اتخاذ القرارات</li>
-                                    <li>تحقيق الاستخدام الأمثل للموارد المتاحة</li>
-                                    <li>تحسين الاتصالات داخل المؤسسة</li>
-                                </ul>
-                            </div>
-                            
-                            <p class="mb-4">يعتمد التنظيم الإداري الفعال على مجموعة من المبادئ الأساسية التي تساهم في تحقيق أهداف المنظمة:</p>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                <div class="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg">
-                                    <h4 class="font-bold">مبدأ وحدة الهدف</h4>
-                                    <p>توجيه جميع الجهود نحو تحقيق أهداف المنظمة</p>
-                                </div>
-                                <div class="bg-purple-50 dark:bg-purple-900/30 p-4 rounded-lg">
-                                    <h4 class="font-bold">مبدأ التخصص وتقسيم العمل</h4>
-                                    <p>تقسيم العمل إلى وظائف متخصصة لزيادة الكفاءة</p>
-                                </div>
-                                <div class="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
-                                    <h4 class="font-bold">مبدأ تحديد المسؤولية</h4>
-                                    <p>تحديد مسؤوليات كل فرد بوضوح</p>
-                                </div>
-                                <div class="bg-red-50 dark:bg-red-900/30 p-4 rounded-lg">
-                                    <h4 class="font-bold">مبدأ تكافؤ السلطة والمسؤولية</h4>
-                                    <p>منح السلطة اللازمة للقيام بالمسؤوليات</p>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-6">
-                                <h3 class="font-bold text-xl mb-3">عناصر التنظيم الإداري</h3>
-                                <div class="diagram-box bg-gray-50 dark:bg-gray-700 rounded-lg p-4 flex items-center justify-center">
-                                    <div class="w-full max-w-2xl">
-                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                            <div class="text-center p-3 bg-primary text-white rounded-lg">
-                                                <div class="mb-2"><i class="fas fa-sitemap text-2xl"></i></div>
-                                                <div>الهيكل التنظيمي</div>
-                                            </div>
-                                            <div class="text-center p-3 bg-primary text-white rounded-lg">
-                                                <div class="mb-2"><i class="fas fa-users text-2xl"></i></div>
-                                                <div>العنصر البشري</div>
-                                            </div>
-                                            <div class="text-center p-3 bg-primary text-white rounded-lg">
-                                                <div class="mb-2"><i class="fas fa-cogs text-2xl"></i></div>
-                                                <div>أنظمة وإجراءات العمل</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-6">
-                                <h3 class="font-bold text-xl mb-3">اختبر معلوماتك</h3>
-                                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                    <div class="quiz-question mb-4">
-                                        <p class="font-medium mb-2">ما هو الهدف الرئيسي من التنظيم الإداري؟</p>
-                                        <div class="space-y-2">
-                                            <div class="flex items-center">
-                                                <input type="radio" id="q1-a" name="q1" class="ml-2">
-                                                <label for="q1-a">زيادة أرباح المؤسسة فقط</label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input type="radio" id="q1-b" name="q1" class="ml-2">
-                                                <label for="q1-b">تقليل عدد الموظفين</label>
-                                            </div>
-                                            <div class="flex items-center">
-                                                <input type="radio" id="q1-c" name="q1" class="ml-2 quiz-correct">
-                                                <label for="q1-c">تقسيم العمل وتنسيق الجهود لتحقيق أهداف المنظمة</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="mt-3 bg-primary hover:bg-purple-700 text-white py-2 px-4 rounded quiz-check">تحقق من الإجابة</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 2 -->
-                    <div id="section2" class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm section">
-                        <div class="section-header cursor-pointer flex justify-between items-center">
-                            <h2 class="text-2xl font-bold text-primary">أنواع الهياكل التنظيمية</h2>
-                            <i class="fas fa-chevron-down text-primary"></i>
-                        </div>
-                        <div class="section-content pt-4">
-                            <p class="mb-4">تتنوع الهياكل التنظيمية حسب طبيعة المؤسسة وحجمها وأهدافها، ولكل نوع مزايا وعيوب. فيما يلي أبرز أنواع الهياكل التنظيمية:</p>
-                            
-                            <div class="space-y-6 mt-6">
-                                <!-- الهيكل الوظيفي -->
-                                <div class="bg-gray-50 dark:bg-gray-700 p-5 rounded-lg">
-                                    <h3 class="text-xl font-bold mb-3 text-primary">1. الهيكل الوظيفي</h3>
-                                    <p class="mb-3">يتم تقسيم المنظمة وفقاً للوظائف الرئيسية مثل الإنتاج، التسويق، الموارد البشرية، المالية.</p>
-                                    
-                                    <div class="diagram-box bg-white dark:bg-gray-800 rounded-lg p-4 my-4">
-                                        <div class="text-center p-3 bg-primary text-white rounded-lg w-40 mx-auto mb-4">
-                                            المدير العام
-                                        </div>
-                                        <div class="grid grid-cols-1 md:grid-cols-4 gap-2 text-center">
-                                            <div class="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
-                                                إدارة الإنتاج
-                                            </div>
-                                            <div class="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
-                                                إدارة التسويق
-                                            </div>
-                                            <div class="p-2 bg-yellow-100 dark:bg-yellow-900/50 rounded-lg">
-                                                الموارد البشرية
-                                            </div>
-                                            <div class="p-2 bg-red-100 dark:bg-red-900/50 rounded-lg">
-                                                الإدارة المالية
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-                                        <div>
-                                            <h4 class="font-bold text-green-600 dark:text-green-400 mb-2">المزايا:</h4>
-                                            <ul class="list-disc list-inside space-y-1">
-                                                <li>يسمح بالتخصص في العمل</li>
-                                                <li>وضوح خطوط السلطة والمسؤولية</li>
-                                                <li>سهولة التنسيق داخل الإدارة الواحدة</li>
-                                            </ul>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-bold text-red-600 dark:text-red-400 mb-2">العيوب:</h4>
-                                            <ul class="list-disc list-inside space-y-1">
-                                                <li>صعوبة التنسيق بين الإدارات المختلفة</li>
-                                                <li>بطء في اتخاذ القرارات المشتركة</li>
-                                                <li>التركيز على أهداف الإدارة بدلاً من أهداف المنظمة</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- الهيكل المصفوفي -->
-                                <div class="bg-gray-50 dark:bg-gray-700 p-5 rounded-lg">
-                                    <h3 class="text-xl font-bold mb-3 text-primary">2. الهيكل المصفوفي</h3>
-                                    <p class="mb-3">يجمع بين التنظيم الوظيفي والتنظيم على أساس المشاريع، حيث يرتبط الموظف بمدير وظيفي ومدير مشروع في نفس الوقت.</p>
-                                    
-                                    <div class="diagram-box bg-white dark:bg-gray-800 rounded-lg p-4 my-4">
-                                        <div class="w-full max-w-2xl mx-auto">
-                                            <div class="text-center">
-                                                <div class="text-center p-3 bg-primary text-white rounded-lg w-40 mx-auto mb-4">
-                                                    المدير العام
-                                                </div>
-                                                <div class="grid grid-cols-1 gap-2 mb-4">
-                                                    <div class="flex">
-                                                        <div class="w-1/3 p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg ml-2">
-                                                            إدارة الإنتاج
-                                                        </div>
-                                                        <div class="w-1/3 p-2 bg-green-100 dark:bg-green-900/50 rounded-lg ml-2">
-                                                            إدارة التسويق
-                                                        </div>
-                                                        <div class="w-1/3 p-2 bg-yellow-100 dark:bg-yellow-900/50 rounded-lg">
-                                                            الموارد البشرية
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="grid grid-cols-1 gap-2">
-                                                    <div class="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">مشروع أ</div>
-                                                    <div class="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">مشروع ب</div>
-                                                    <div class="p-2 bg-pink-100 dark:bg-pink-900/50 rounded-lg">مشروع ج</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-                                        <div>
-                                            <h4 class="font-bold text-green-600 dark:text-green-400 mb-2">المزايا:</h4>
-                                            <ul class="list-disc list-inside space-y-1">
-                                                <li>مرونة عالية في استخدام الموارد البشرية</li>
-                                                <li>تنسيق أفضل بين الإدارات</li>
-                                                <li>تبادل الخبرات والمهارات بين المشاريع</li>
-                                            </ul>
-                                        </div>
-                                        <div>
-                                            <h4 class="font-bold text-red-600 dark:text-red-400 mb-2">العيوب:</h4>
-                                            <ul class="list-disc list-inside space-y-1">
-                                                <li>ازدواجية في السلطة قد تؤدي إلى صراعات</li>
-                                                <li>تعقيد في خطوط الاتصال</li>
-                                                <li>صعوبة تحديد المسؤوليات بشكل دقيق</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- هياكل أخرى -->
-                                <div class="bg-gray-50 dark:bg-gray-700 p-5 rounded-lg">
-                                    <h3 class="text-xl font-bold mb-3 text-primary">3. أنواع أخرى من الهياكل التنظيمية</h3>
-                                    
-                                    <div class="space-y-4">
-                                        <div class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <h4 class="font-bold">الهيكل التنظيمي القطاعي (حسب المنتج)</h4>
-                                            <p>تقسيم المنظمة حسب المنتجات أو خطوط الإنتاج، مناسب للمنظمات ذات المنتجات المتنوعة.</p>
-                                        </div>
-                                        
-                                        <div class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <h4 class="font-bold">الهيكل التنظيمي الجغرافي</h4>
-                                            <p>تقسيم المنظمة حسب المناطق الجغرافية، مناسب للمنظمات ذات الانتشار الواسع.</p>
-                                        </div>
-                                        
-                                        <div class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <h4 class="font-bold">الهيكل التنظيمي الشبكي</h4>
-                                            <p>هيكل مرن يعتمد على التعاقدات الخارجية والشراكات لأداء الوظائف المختلفة.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-6">
-                                <h3 class="font-bold text-xl mb-3">تطبيق عملي</h3>
-                                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                    <p class="mb-3">اختر الهيكل التنظيمي المناسب للحالات التالية:</p>
-                                    
-                                    <div class="space-y-3 practice-exercise">
-                                        <div class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <p class="font-medium mb-2">شركة تكنولوجيا ناشئة تعمل على عدة مشاريع مختلفة في نفس الوقت مع فريق محدود.</p>
-                                            <select class="border p-2 rounded w-full text-gray-800 text-base">
-                                                <option>اختر الهيكل المناسب</option>
-                                                <option value="functional">الهيكل الوظيفي</option>
-                                                <option value="matrix" data-correct="true">الهيكل المصفوفي</option>
-                                                <option value="divisional">الهيكل القطاعي</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <div class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <p class="font-medium mb-2">شركة تصنيع كبيرة ذات منتجات متجانسة وأقسام وظيفية واضحة.</p>
-                                            <select class="border p-2 rounded w-full text-gray-800 text-base">
-                                                <option>اختر الهيكل المناسب</option>
-                                                <option value="functional" data-correct="true">الهيكل الوظيفي</option>
-                                                <option value="matrix">الهيكل المصفوفي</option>
-                                                <option value="divisional">الهيكل القطاعي</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    
-                                    <button class="mt-4 bg-primary hover:bg-purple-700 text-white py-2 px-4 rounded practice-check">تحقق من الإجابات</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Sections 3-6 truncated for brevity -->
-                    <div id="section3" class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm section">
-                        <div class="section-header cursor-pointer flex justify-between items-center">
-                            <h2 class="text-2xl font-bold text-primary">تصميم الهيكل التنظيمي</h2>
-                            <i class="fas fa-chevron-down text-primary"></i>
-                        </div>
-                        <div class="section-content pt-4">
-                            <p class="mb-4">تصميم الهيكل التنظيمي هو عملية إنشاء نظام رسمي للعلاقات والأدوار داخل المنظمة. يساعد على تحديد كيفية توزيع المهام والمسؤوليات وتنظيم تدفق المعلومات والسلطة.</p>
-                            
-                            <div class="space-y-6 mt-4">
-                                <div class="bg-gray-50 dark:bg-gray-700 p-5 rounded-lg">
-                                    <h3 class="text-xl font-bold mb-3">خطوات تصميم الهيكل التنظيمي</h3>
-                                    
-                                    <ol class="space-y-4 list-decimal list-inside">
-                                        <li class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <span class="font-bold">تحديد الأهداف والاستراتيجيات</span>
-                                            <p class="mt-1">يجب أن يتوافق الهيكل التنظيمي مع أهداف المنظمة واستراتيجياتها.</p>
-                                        </li>
-                                        <li class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <span class="font-bold">تحديد الأنشطة الرئيسية</span>
-                                            <p class="mt-1">حصر الأنشطة والمهام اللازمة لتحقيق الأهداف.</p>
-                                        </li>
-                                        <li class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <span class="font-bold">تجميع الأنشطة في وحدات تنظيمية</span>
-                                            <p class="mt-1">دمج الأنشطة المتشابهة في إدارات أو أقسام.</p>
-                                        </li>
-                                        <li class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <span class="font-bold">تحديد العلاقات بين الوحدات</span>
-                                            <p class="mt-1">تحديد خطوط السلطة والمسؤولية والاتصالات بين الوحدات.</p>
-                                        </li>
-                                        <li class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <span class="font-bold">إعداد الخرائط التنظيمية</span>
-                                            <p class="mt-1">إنشاء رسم بياني يوضح الهيكل التنظيمي والعلاقات بين الوحدات.</p>
-                                        </li>
-                                    </ol>
-                                </div>
-                                
-                                <div class="bg-gray-50 dark:bg-gray-700 p-5 rounded-lg">
-                                    <h3 class="text-xl font-bold mb-3">العوامل المؤثرة في تصميم الهيكل التنظيمي</h3>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <h4 class="font-bold text-primary">العوامل الداخلية</h4>
-                                            <ul class="list-disc list-inside mt-2 space-y-1">
-                                                <li>حجم المنظمة</li>
-                                                <li>طبيعة النشاط</li>
-                                                <li>التكنولوجيا المستخدمة</li>
-                                                <li>الموارد المتاحة</li>
-                                                <li>ثقافة المنظمة</li>
-                                            </ul>
-                                        </div>
-                                        <div class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <h4 class="font-bold text-primary">العوامل الخارجية</h4>
-                                            <ul class="list-disc list-inside mt-2 space-y-1">
-                                                <li>البيئة الاقتصادية</li>
-                                                <li>البيئة التنافسية</li>
-                                                <li>التغيرات التكنولوجية</li>
-                                                <li>القوانين والتشريعات</li>
-                                                <li>العوامل الاجتماعية والثقافية</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-6">
-                                <h3 class="font-bold text-xl mb-3">تمرين تطبيقي</h3>
-                                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                    <p class="mb-3">فيما يلي بعض التحديات التنظيمية. حدد الإجراء المناسب لمعالجتها:</p>
-                                    
-                                    <div class="space-y-4 practice-structure">
-                                        <div class="p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                            <p class="font-medium mb-2">تداخل في الصلاحيات والمسؤوليات بين قسمين.</p>
-                                            <div class="space-y-2">
-                                                <div class="flex items-center">
-                                                    <input type="radio" id="s3-q1-a" name="s3-q1" class="ml-2">
-                                                    <label for="s3-q1-a">إلغاء أحد القسمين</label>
-                                                </div>
-                                                <div class="flex items-center">
-                                                    <input type="radio" id="s3-q1-b" name="s3-q1" class="ml-2 correct-answer">
-                                                    <label for="s3-q1-b">إعادة تحديد الاختصاصات والمسؤوليات بوضوح</label>
-                                                </div>
-                                                <div class="flex items-center">
-                                                    <input type="radio" id="s3-q1-c" name="s3-q1" class="ml-2">
-                                                    <label for="s3-q1-c">دمج القسمين معاً</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <button class="mt-4 bg-primary hover:bg-purple-700 text-white py-2 px-4 rounded structure-check">تحقق من الإجابة</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-center mt-8 space-x-4 space-x-reverse">
-                        <button id="prev-module" class="bg-gray-600 hover:bg-gray-700 text-white py-3 px-6 rounded-lg shadow-md">
-                            <i class="fas fa-arrow-right ml-2"></i> الوحدة السابقة
-                        </button>
-                        <button id="next-module" class="bg-primary hover:bg-purple-700 text-white py-3 px-6 rounded-lg shadow-md">
-                            الوحدة التالية <i class="fas fa-arrow-left mr-2"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // التبديل بين الواجهة الرئيسية والمحتوى التعليمي
-            const homeScreen = document.getElementById('home-screen');
-            const courseContent = document.getElementById('course-content');
-            const startCourseBtn = document.getElementById('start-course');
-            
-            // زر بدء الدورة
-            startCourseBtn.addEventListener('click', function() {
-                homeScreen.classList.add('hidden');
-                courseContent.classList.remove('hidden');
-            });
-            
-            // إضافة زر العودة للواجهة الرئيسية
-            const header = document.querySelector('#course-content .container header');
-            const backBtn = document.createElement('button');
-            backBtn.innerHTML = '<i class="fas fa-home mr-2"></i> العودة للصفحة الرئيسية';
-            backBtn.className = 'bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded mt-4';
-            backBtn.addEventListener('click', function() {
-                courseContent.classList.add('hidden');
-                homeScreen.classList.remove('hidden');
-            });
-            header.appendChild(backBtn);
-            // Section toggle functionality
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => {
-                const header = section.querySelector('.section-header');
-                header.addEventListener('click', () => {
-                    section.classList.toggle('section-active');
-                    updateProgress();
-                });
-            });
-
-            // Navigation highlighting
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = link.getAttribute('href').substring(1);
-                    const targetSection = document.getElementById(targetId);
-                    
-                    // Remove active class from all sections
-                    sections.forEach(s => {
-                        s.classList.remove('section-active');
-                    });
-                    
-                    // Add active class to target section
-                    targetSection.classList.add('section-active');
-                    
-                    // Scroll to section
-                    targetSection.scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Update active link
-                    navLinks.forEach(l => l.classList.remove('active-section', 'bg-primary', 'text-white'));
-                    link.classList.add('active-section', 'bg-primary', 'text-white');
-                    
-                    updateProgress();
-                });
-            });
-
-            // Quiz check
-            const quizCheckButtons = document.querySelectorAll('.quiz-check');
-            quizCheckButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const parentDiv = this.closest('div');
-                    const selectedAnswer = parentDiv.querySelector('input:checked');
-                    const correctAnswer = parentDiv.querySelector('.quiz-correct');
-                    
-                    if (selectedAnswer) {
-                        if (selectedAnswer === correctAnswer) {
-                            this.textContent = 'إجابة صحيحة! 👍';
-                            this.classList.remove('bg-primary');
-                            this.classList.add('bg-green-600');
-                        } else {
-                            this.textContent = 'إجابة خاطئة، حاول مرة أخرى';
-                            this.classList.remove('bg-primary');
-                            this.classList.add('bg-red-600');
-                            
-                            // Highlight correct answer
-                            correctAnswer.parentElement.classList.add('bg-green-100', 'dark:bg-green-900/30', 'p-1', 'rounded');
-                        }
-                    } else {
-                        alert('الرجاء اختيار إجابة');
-                    }
-                });
-            });
-
-            // Practice exercises check
-            document.querySelector('.practice-check')?.addEventListener('click', function() {
-                const selects = document.querySelectorAll('.practice-exercise select');
-                let allCorrect = true;
-                
-                selects.forEach(select => {
-                    const selectedOption = select.options[select.selectedIndex];
-                    const isCorrect = selectedOption.getAttribute('data-correct') === 'true';
-                    
-                    if (isCorrect) {
-                        select.classList.add('bg-green-100', 'border-green-500');
-                    } else {
-                        select.classList.add('bg-red-100', 'border-red-500');
-                        allCorrect = false;
-                    }
-                });
-                
-                if (allCorrect) {
-                    this.textContent = 'أحسنت! جميع الإجابات صحيحة';
-                    this.classList.remove('bg-primary');
-                    this.classList.add('bg-green-600');
-                } else {
-                    this.textContent = 'بعض الإجابات خاطئة، حاول مرة أخرى';
-                    this.classList.remove('bg-primary');
-                    this.classList.add('bg-red-600');
-                }
-            });
-
-            // Structure exercise check
-            document.querySelector('.structure-check')?.addEventListener('click', function() {
-                const correctAnswer = document.querySelector('.correct-answer');
-                const isSelected = correctAnswer.checked;
-                
-                if (isSelected) {
-                    this.textContent = 'إجابة صحيحة! 👍';
-                    this.classList.remove('bg-primary');
-                    this.classList.add('bg-green-600');
-                } else {
-                    this.textContent = 'إجابة خاطئة، حاول مرة أخرى';
-                    this.classList.remove('bg-primary');
-                    this.classList.add('bg-red-600');
-                    
-                    // Highlight correct answer
-                    correctAnswer.parentElement.classList.add('bg-green-100', 'dark:bg-green-900/30', 'p-1', 'rounded');
-                }
-            });
-
-            // Next module button
-            document.getElementById('next-module').addEventListener('click', function() {
-                const activeSection = document.querySelector('.section-active');
-                const nextSection = activeSection.nextElementSibling;
-                
-                if (nextSection && nextSection.classList.contains('section')) {
-                    // Hide current section
-                    activeSection.classList.remove('section-active');
-                    
-                    // Show next section
-                    nextSection.classList.add('section-active');
-                    
-                    // Update active link
-                    const nextSectionId = nextSection.getAttribute('id');
-                    const nextLink = document.querySelector(`a[href="#${nextSectionId}"]`);
-                    
-                    navLinks.forEach(l => l.classList.remove('active-section', 'bg-primary', 'text-white'));
-                    nextLink.classList.add('active-section', 'bg-primary', 'text-white');
-                    
-                    // Scroll to next section
-                    nextSection.scrollIntoView({ behavior: 'smooth' });
-                    
-                    updateProgress();
-                } else {
-                    alert('لقد وصلت إلى نهاية الوحدات التدريبية');
-                }
-            });
-
-            // Print materials button
-            document.getElementById('print-material').addEventListener('click', function() {
-                window.print();
-            });
-            
-            // Download as PDF button
-            document.getElementById('download-pdf').addEventListener('click', function() {
-                alert('جاري تحضير ملف PDF للتحميل...');
-                // في بيئة حقيقية، هنا يمكن استخدام مكتبة مثل jsPDF أو html2pdf
-                // ولكن لتبسيط التطبيق سنستخدم طريقة الطباعة كبديل
-                window.print();
-            });
-            
-            // Download as HTML button
-            document.getElementById('download-html').addEventListener('click', function() {
-                // إنشاء نسخة من الصفحة الحالية
-                const htmlContent = document.documentElement.outerHTML;
-                
-                // إنشاء Blob من المحتوى
-                const blob = new Blob([htmlContent], { type: 'text/html' });
-                
-                // إنشاء رابط تحميل
-                const downloadLink = document.createElement('a');
-                downloadLink.href = URL.createObjectURL(blob);
-                downloadLink.download = 'الحقيبة_التدريبية_للتنظيم_الإداري.html';
-                
-                // إضافة الرابط للصفحة، النقر عليه، ثم إزالته
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                
-                // تنظيف
-                setTimeout(() => {
-                    document.body.removeChild(downloadLink);
-                    URL.revokeObjectURL(downloadLink.href);
-                }, 100);
-            });
-
-            // Progress tracking
-            function updateProgress() {
-                const totalSections = sections.length;
-                const activeSections = document.querySelectorAll('.section-active').length;
-                const progressPercent = Math.round((activeSections / totalSections) * 100);
-                
-                const progressBar = document.getElementById('progress-bar');
-                const progressText = document.getElementById('progress-percent');
-                
-                progressBar.style.width = `${progressPercent}%`;
-                progressBar.classList.add('progress-animate');
-                progressText.textContent = `${progressPercent}%`;
-                
-                setTimeout(() => {
-                    progressBar.classList.remove('progress-animate');
-                }, 500);
-            }
-
-            // Initialize progress
-            updateProgress();
-        });
-    </script>
-</body>
-</html>
